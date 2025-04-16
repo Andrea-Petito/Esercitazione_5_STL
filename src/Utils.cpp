@@ -8,6 +8,8 @@
 using namespace std;
 using namespace Eigen;
 
+const double tolerance = 1e-10;
+
 bool loadCell0Ds(const string& filename, vector<Cell0D>& cells) {
 	ifstream file(filename);
 	if (file.fail()) {
@@ -43,7 +45,7 @@ bool loadCell1Ds(const string& filename, vector<Cell1D>& cells) {
 		return false;
 	}
     string line;
-    getline(file, line); // Salta intestazione
+    getline(file, line); 
 
     while (getline(file, line)) {
         stringstream ss(line);
@@ -140,7 +142,7 @@ bool checkMeshValidity(const PolygonalMesh& mesh) {
     for (const auto& edge : mesh.Cell1Ds) {
         const auto& p1 = mesh.Cell0Ds[edge.origin];
         const auto& p2 = mesh.Cell0Ds[edge.end];
-        if (computeDistance(p1, p2) == 0) {
+        if (abs(computeDistance(p1, p2)) < tolerance) {
             cerr << "Edge con lunghezza nulla: ID = " << edge.id << endl;
             return false;
         }
@@ -150,7 +152,7 @@ bool checkMeshValidity(const PolygonalMesh& mesh) {
         for (int idx : cell.vertices) {
             vertices.push_back(mesh.Cell0Ds[idx]);
         }
-        if (computeArea(vertices) == 0) {
+        if (abs(computeArea(vertices)) < tolerance) {
             cerr << "Cella con area nulla: ID = " << cell.id << endl;
             return false;
         }
