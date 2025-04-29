@@ -31,7 +31,6 @@ int main() {
     }
 
     double area = computeArea(vertices);
-    cout << "Area della cella con ID " << cell.id << " = " << area << endl;
 }
 
     PolygonalMesh expectedMesh;
